@@ -1,7 +1,7 @@
 name: Build IPA
 
 on:
-  workflow_dispatch: # Allows you to manually click a button to start the build
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,7 +11,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Grant execute permission for build script
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Grant execute permission
         run: chmod +x ./build-ipa.sh
 
       - name: Run IPA Build Script
@@ -19,6 +22,10 @@ jobs:
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
+        if: always() # Uploads even if previous step had output issues
         with:
           name: AirCard-IPA
-          path: "**/*.ipa"
+          path: |
+            **/*.ipa
+            **/*.app
+            build/
