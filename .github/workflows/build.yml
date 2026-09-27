@@ -1,0 +1,24 @@
+name: Build IPA
+
+on:
+  workflow_dispatch: # Allows you to manually click a button to start the build
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Grant execute permission for build script
+        run: chmod +x ./build-ipa.sh
+
+      - name: Run IPA Build Script
+        run: ./build-ipa.sh
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AirCard-IPA
+          path: "**/*.ipa"
